@@ -6,6 +6,7 @@ import (
 	"io"
 	"log"
 	"os"
+	"sort"
 	"strconv"
 	"strings"
 )
@@ -16,8 +17,8 @@ var (
 		"file to read")
 	regionsString = flag.String(
 		"regions",
-		"China,Australia,Canada,United Kingdom",
-		"Regions to graph")
+		"",
+		"Only show certain reasons (|) separated")
 	countsIndex = flag.Int(
 		"counts_index",
 		4,
@@ -30,12 +31,47 @@ var (
 		"incrementals",
 		false,
 		"Calculate daily incrementals over previous day")
+	topN = flag.Int(
+		"top",
+		10,
+		"Only show the top N graphs")
 )
+
+func topFilter(n int, ranks map[string]int) []string {
+	type kv struct {
+		Key   string
+		Value int
+	}
+
+	if n > len(ranks) {
+		n = len(ranks)
+	}
+
+	var ss []kv
+	for k, v := range ranks {
+		ss = append(ss, kv{k, v})
+	}
+
+	// Then sorting the slice by value, higher first.
+	sort.Slice(ss, func(i, j int) bool {
+		return ss[i].Value > ss[j].Value
+	})
+
+	// Print the x top values
+	var labels []string
+	for _, kv := range ss[:n] {
+		labels = append(labels, kv.Key)
+	}
+	return labels
+}
 
 func main() {
 	flag.Parse()
 
-	regions := strings.Split(*regionsString, ",")
+	regions := strings.Split(*regionsString, "|")
+	if *regionsString == "" {
+		regions = nil
+	}
 
 	f, err := os.Open(*inFile)
 	if err == io.EOF {
@@ -50,6 +86,7 @@ func main() {
 	dates := headers[*countsIndex:]
 
 	counts := make(map[string]int)
+	regionNames := make(map[string]bool)
 
 	for {
 		record, err := r.Read()
@@ -62,6 +99,7 @@ func main() {
 		}
 
 		region := record[*regionIndex]
+		regionNames[region] = true
 		for i, c := range record[*countsIndex:] {
 			n, err := strconv.Atoi(c)
 			if err != nil {
@@ -69,6 +107,12 @@ func main() {
 			}
 			k := region + "," + dates[i]
 			counts[k] += n
+		}
+	}
+
+	if len(regions) == 0 {
+		for k := range regionNames {
+			regions = append(regions, k)
 		}
 	}
 
@@ -86,6 +130,20 @@ func main() {
 		}
 
 		counts = incrementals
+	}
+
+	if *topN > 0 {
+		max := make(map[string]int)
+		// Calculate max each for each region
+		for _, d := range dates {
+			for _, r := range regions {
+				k := r + "," + d
+				if max[r] < counts[k] {
+					max[r] = counts[k]
+				}
+			}
+		}
+		regions = topFilter(*topN, max)
 	}
 
 	// Write out the records
