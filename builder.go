@@ -3,7 +3,6 @@ package main
 import (
 	"encoding/csv"
 	"flag"
-	"fmt"
 	"io"
 	"log"
 	"os"
@@ -64,17 +63,34 @@ func main() {
 		}
 	}
 
-	fmt.Print("Date")
+	// Write out the records
+	w := csv.NewWriter(os.Stdout)
+
+	// Write header
+	var record []string
+	record = append(record, "Date")
+
 	for _, r := range regions {
-		fmt.Print(",", r)
+		record = append(record, r)
 	}
-	fmt.Print("\n")
+
+	w.Write(record)
+	if err := w.Error(); err != nil {
+		log.Fatalln("error writing csv:", err)
+	}
 
 	for _, d := range dates {
-		fmt.Print(d)
+		record = append(record[:0], d)
 		for _, r := range regions {
-			fmt.Print(",", counts[r+","+d])
+			record = append(record, strconv.Itoa(counts[r+","+d]))
 		}
-		fmt.Print("\n")
+		w.Write(record)
+		if err := w.Error(); err != nil {
+			log.Fatalln("error writing csv:", err)
+		}
+	}
+	w.Flush()
+	if err := w.Error(); err != nil {
+		log.Fatalln("error writing csv:", err)
 	}
 }
