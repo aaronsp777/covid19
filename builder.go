@@ -26,6 +26,10 @@ var (
 		"region_index",
 		1,
 		"Column of Region (zero based.)")
+	calculateIncrementals = flag.Bool(
+		"incrementals",
+		false,
+		"Calculate daily incrementals over previous day")
 )
 
 func main() {
@@ -66,6 +70,22 @@ func main() {
 			k := region + "," + dates[i]
 			counts[k] += n
 		}
+	}
+
+	if *calculateIncrementals {
+		incrementals := make(map[string]int)
+
+		for i, d := range dates {
+			if i == 0 {
+				continue
+			}
+			d0 := dates[i-1]
+			for _, r := range regions {
+				incrementals[r+","+d] = counts[r+","+d] - counts[r+","+d0]
+			}
+		}
+
+		counts = incrementals
 	}
 
 	// Write out the records
