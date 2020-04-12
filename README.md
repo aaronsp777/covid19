@@ -1,10 +1,14 @@
 # covid19
 Graphing covid19 timeseries
 
-git clone https://github.com/CSSEGISandData/COVID-19
+# Get dataset
 
-download dygraph and put the following files into static:
+$ git clone https://github.com/CSSEGISandData/COVID-19
 
-dygraph.css
-dygraph.js
-dygraph.min.js
+# Download dygraph and put the following files into static:
+
+$ pushd static
+$ curl -O http://dygraphs.com/2.1.0/dygraph.min.js
+$ curl -O http://dygraphs.com/2.1.0/dygraph.js
+$ curl -O http://dygraphs.com/2.1.0/dygraph.css
+$ popd
