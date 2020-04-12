@@ -14,9 +14,18 @@ var (
 	inFile = flag.String("in",
 		"COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv",
 		"file to read")
-	regionsString = flag.String("regions",
+	regionsString = flag.String(
+		"regions",
 		"China,Australia,Canada,United Kingdom",
 		"Regions to graph")
+	countsIndex = flag.Int(
+		"counts_index",
+		4,
+		"First column with counts (zero based.)")
+	regionIndex = flag.Int(
+		"region_index",
+		1,
+		"Column of Region (zero based.)")
 )
 
 func main() {
@@ -34,7 +43,7 @@ func main() {
 	if err == io.EOF {
 		log.Fatal(err)
 	}
-	dates := headers[4:]
+	dates := headers[*countsIndex:]
 
 	counts := make(map[string]int)
 
@@ -48,12 +57,8 @@ func main() {
 			log.Fatal(err)
 		}
 
-		if len(record) < 4 {
-			log.Print("error: short record:", record)
-			continue
-		}
-		region := record[1]
-		for i, c := range record[4:] {
+		region := record[*regionIndex]
+		for i, c := range record[*countsIndex:] {
 			n, err := strconv.Atoi(c)
 			if err != nil {
 				log.Print(err)
