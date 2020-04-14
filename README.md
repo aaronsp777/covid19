@@ -28,4 +28,4 @@ make
 ./server &
 ```
 
-# Visit http://localhost:8080/global.html
+# Visit http://localhost:8080/static/global.html
