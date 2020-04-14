@@ -1,0 +1,18 @@
+<html>
+<head>
+<script type="text/javascript"
+  src="dygraph.js"></script>
+<link rel="stylesheet" src="dygraph.css" />
+</head>
+<body>
+<div id="graphdiv2"
+  style="width:100%; height:100%;"></div>
+<script type="text/javascript">
+  g2 = new Dygraph(
+    document.getElementById("graphdiv2"),
+    "canada_rates.csv", // path to CSV file
+    {logscale: false}          // options
+  );
+</script>
+</body>
+</html>
