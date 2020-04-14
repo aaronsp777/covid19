@@ -16,3 +16,16 @@ curl -O http://dygraphs.com/2.1.0/dygraph.js
 curl -O http://dygraphs.com/2.1.0/dygraph.css
 popd
 ```
+
+# Build everything
+
+```sh
+make
+```
+
+# Run the server
+```sh
+./server &
+```
+
+# Visit http://localhost:8080/global.html
