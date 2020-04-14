@@ -10,7 +10,7 @@ builder: builder.go
 server: server.go
 	go build $<
 
-counts: static/global.csv static/global_rates.csv static/us.csv static/us_rates.csv static/china.csv static/china_rates.csv
+counts: static/global.csv static/global_rates.csv static/us.csv static/us_rates.csv static/china.csv static/china_rates.csv static/washington.csv static/washington_rates.csv
 dygraph: static/dygraph.min.js static/dygraph.js static/dygraph.css
 
 static/dygraph.min.js:
@@ -32,3 +32,7 @@ static/china.csv: COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_ser
 	./builder -in $< --filter_value China -region_index 0 > $@
 static/china_rates.csv: COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv
 	./builder -in $< --filter_value China -region_index 0 --incremental > $@
+static/washington.csv: COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_US.csv
+	./builder -in $< -region_index 5 -counts_index 11 --filter_index 6 --filter_value Washington > $@
+static/washington_rates.csv: COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_US.csv
+	./builder -in $< -region_index 5 -counts_index 11 --filter_index 6 --filter_value Washington --incremental > $@
