@@ -10,7 +10,7 @@ builder: builder.go
 server: server.go
 	go build $<
 
-counts: static/global.csv static/global_rates.csv static/us.csv static/us_rates.csv static/china.csv static/china_rates.csv static/washington.csv static/washington_rates.csv static/canada.csv static/canada_rates.csv
+counts: static/global.csv static/global_rates.csv static/us.csv static/us_rates.csv static/china.csv static/china_rates.csv static/washington.csv static/washington_rates.csv static/canada.csv static/canada_rates.csv static/california.csv static/california_rates.csv
 dygraph: static/dygraph.min.js static/dygraph.js static/dygraph.css
 
 static/dygraph.min.js:
@@ -46,3 +46,8 @@ static/washington.csv: $(CONFIRMED_US)
 	./builder -in $< -region_index 5 -counts_index 11 --filter_index 6 --filter_value Washington > $@
 static/washington_rates.csv: $(CONFIRMED_US)
 	./builder -in $< -region_index 5 -counts_index 11 --filter_index 6 --filter_value Washington --incremental > $@
+
+static/california.csv: $(CONFIRMED_US)
+	./builder -in $< -region_index 5 -counts_index 11 --filter_index 6 --filter_value California > $@
+static/california_rates.csv: $(CONFIRMED_US)
+	./builder -in $< -region_index 5 -counts_index 11 --filter_index 6 --filter_value California --incremental > $@
