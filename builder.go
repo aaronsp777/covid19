@@ -28,9 +28,9 @@ var (
 		1,
 		"Column of Region (zero based.)")
 	calculateIncrementals = flag.Bool(
-		"incrementals",
+		"incremental",
 		false,
-		"Calculate daily incrementals over previous day")
+		"Calculate incremental daily rates over previous day")
 	topN = flag.Int(
 		"top",
 		10,
