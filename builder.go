@@ -35,6 +35,14 @@ var (
 		"top",
 		10,
 		"Only show the top N graphs")
+	filterIndex = flag.Int(
+		"filter_index",
+		1,
+		"Column to filter (zero based.)")
+	filterValue = flag.String(
+		"filter_value",
+		"",
+		"Optional value to fitler against")
 )
 
 func topFilter(n int, ranks map[string]int) []string {
@@ -96,6 +104,10 @@ func main() {
 		}
 		if err != nil {
 			log.Fatal(err)
+		}
+
+		if *filterValue != "" && *filterValue != record[*filterIndex] {
+			continue
 		}
 
 		region := record[*regionIndex]
