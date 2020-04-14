@@ -10,7 +10,7 @@ builder: builder.go
 server: server.go
 	go build $<
 
-counts: static/global.csv static/global_rates.csv static/us.csv static/us_rates.csv static/china.csv static/china_rates.csv static/washington.csv static/washington_rates.csv
+counts: static/global.csv static/global_rates.csv static/us.csv static/us_rates.csv static/china.csv static/china_rates.csv static/washington.csv static/washington_rates.csv static/canada.csv static/canada_rates.csv
 dygraph: static/dygraph.min.js static/dygraph.js static/dygraph.css
 
 static/dygraph.min.js:
@@ -20,19 +20,29 @@ static/dygraph.js:
 static/dygraph.css:
 	cd static && curl -O http://dygraphs.com/2.1.0/dygraph.css
 
-static/global.csv: COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv
+CONFIRMED_GLOBAL = COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv
+CONFIRMED_US = COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_US.csv
+
+static/global.csv: $(CONFIRMED_GLOBAL)
 	./builder -in $< > $@
-static/global_rates.csv: COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv
+static/global_rates.csv: $(CONFIRMED_GLOBAL)
 	./builder -in $< --incremental > $@
-static/us.csv: COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_US.csv
+static/us.csv: $(CONFIRMED_US)
 	./builder -in $< -region_index 6 -counts_index 11 > $@
-static/us_rates.csv: COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_US.csv
+static/us_rates.csv: $(CONFIRMED_US)
 	./builder -in $< -region_index 6 -counts_index 11 --incremental > $@
-static/china.csv: COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv
+
+static/china.csv: $(CONFIRMED_GLOBAL)
 	./builder -in $< --filter_value China -region_index 0 > $@
-static/china_rates.csv: COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv
+static/china_rates.csv: $(CONFIRMED_GLOBAL)
 	./builder -in $< --filter_value China -region_index 0 --incremental > $@
-static/washington.csv: COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_US.csv
+
+static/canada.csv: $(CONFIRMED_GLOBAL)
+	./builder -in $< --filter_value Canada -region_index 0 > $@
+static/canada_rates.csv: $(CONFIRMED_GLOBAL)
+	./builder -in $< --filter_value Canada -region_index 0 --incremental > $@
+
+static/washington.csv: $(CONFIRMED_US)
 	./builder -in $< -region_index 5 -counts_index 11 --filter_index 6 --filter_value Washington > $@
-static/washington_rates.csv: COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_US.csv
+static/washington_rates.csv: $(CONFIRMED_US)
 	./builder -in $< -region_index 5 -counts_index 11 --filter_index 6 --filter_value Washington --incremental > $@
