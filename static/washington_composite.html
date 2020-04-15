@@ -1,0 +1,53 @@
+<html>
+<head>
+<script type="text/javascript"
+  src="dygraph.js"></script>
+<link rel="stylesheet" src="dygraph.css" />
+</head>
+<body>
+Global
+<div id="global" style="width:100%; height:50%;"></div>
+Global Rates
+<div id="global_rates" style="width:100%; height:50%;"></div>
+US
+<div id="us" style="width:100%; height:50%;"></div>
+US Rates
+<div id="us_rates" style="width:100%; height:50%;"></div>
+Washington State
+<div id="washington" style="width:100%; height:50%;"></div>
+Washington State Rates
+<div id="washington_rates" style="width:100%; height:50%;"></div>
+<script type="text/javascript">
+  g2 = new Dygraph(
+    document.getElementById("global"),
+    "global.csv", // path to CSV file
+    {logscale: false} // options
+  );
+  g2 = new Dygraph(
+    document.getElementById("global_rates"),
+    "global_rates.csv", // path to CSV file
+    {logscale: false} // options
+  );
+  g2 = new Dygraph(
+    document.getElementById("us"),
+    "us.csv", // path to CSV file
+    {logscale: false} // options
+  );
+  g3 = new Dygraph(
+    document.getElementById("us_rates"),
+    "us_rates.csv", // path to CSV file
+    {logscale: false} // options
+  );
+  g3 = new Dygraph(
+    document.getElementById("washington"),
+    "washington.csv", // path to CSV file
+    {logscale: false} // options
+  );
+  g3 = new Dygraph(
+    document.getElementById("washington_rates"),
+    "washington_rates.csv", // path to CSV file
+    {logscale: false} // options
+  );
+</script>
+</body>
+</html>
