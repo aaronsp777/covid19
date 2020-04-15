@@ -33,7 +33,7 @@ var (
 		"Calculate incremental daily rates over previous day")
 	topN = flag.Int(
 		"top",
-		10,
+		7,
 		"Only show the top N graphs")
 	filterIndex = flag.Int(
 		"filter_index",
