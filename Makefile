@@ -54,4 +54,5 @@ static/california_rates.csv: $(CONFIRMED_US)
 
 BUCKET = gs://aaronsp777-covid19/static
 push:
-	gsutil -m rsync -r ./static $(BUCKET)
+	gsutil -m rm -r $(BUCKET)
+	gsutil -m rsync -d -r ./static $(BUCKET)
