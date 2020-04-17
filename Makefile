@@ -51,3 +51,7 @@ static/california.csv: $(CONFIRMED_US)
 	./builder -in $< -region_index 5 -counts_index 11 --filter_index 6 --filter_value California > $@
 static/california_rates.csv: $(CONFIRMED_US)
 	./builder -in $< -region_index 5 -counts_index 11 --filter_index 6 --filter_value California --incremental > $@
+
+BUCKET = gs://aaronsp777-covid19/static
+push:
+	gsutil -m rsync -r ./static $(BUCKET)
